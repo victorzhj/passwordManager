@@ -6,12 +6,12 @@ namespace server.Services
 {
     public class PasswordService : IPasswordService
     {
-        public bool AddPassword([FromBody] PasswordDto passwordDto)
+        public Task<bool> AddPassword(PasswordDto passwordDto)
         {
             throw new NotImplementedException();
         }
 
-        public bool DeletePassword([FromBody] PasswordDto passwordDto)
+        public Task<bool> DeletePassword(PasswordDto passwordDto)
         {
             throw new NotImplementedException();
         }
@@ -21,7 +21,7 @@ namespace server.Services
             throw new NotImplementedException();
         }
 
-        public bool UpdatePassword([FromBody] PasswordDto passwordDto)
+        public Task<bool> UpdatePassword(PasswordDto passwordDto)
         {
             throw new NotImplementedException();
         }

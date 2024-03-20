@@ -6,8 +6,8 @@ namespace server.Services.Interfaces
     public interface IPasswordService
     {
         public Task<List<PasswordDto>> GetPasswords([FromBody] PasswordDto passwordDto);
-        public bool AddPassword([FromBody] PasswordDto passwordDto);
-        public bool DeletePassword([FromBody] PasswordDto passwordDto);
-        public bool UpdatePassword([FromBody] PasswordDto passwordDto);
+        public Task<bool> AddPassword(PasswordDto passwordDto);
+        public Task<bool> DeletePassword(PasswordDto passwordDto);
+        public Task<bool> UpdatePassword(PasswordDto passwordDto);
     }
 }

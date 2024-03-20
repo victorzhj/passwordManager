@@ -17,7 +17,7 @@ namespace server.Controllers
         }
 
         [HttpGet("getPasswords")]
-        public IActionResult GetPasswords([FromBody] PasswordDto passwordDto)
+        public async Task<IActionResult> GetPasswords([FromBody] PasswordDto passwordDto)
         {
             try
             {
@@ -35,11 +35,11 @@ namespace server.Controllers
         }
 
         [HttpPost("addPassword")]
-        public IActionResult AddPassword([FromBody] PasswordDto passwordDto)
+        public async Task<IActionResult> AddPassword([FromBody] PasswordDto passwordDto)
         {
             try
             {
-                bool saved = passwordService.AddPassword(passwordDto);
+                bool saved = await passwordService.AddPassword(passwordDto);
                 if (!saved)
                 {
                     return BadRequest("Cannot add password");
@@ -53,11 +53,11 @@ namespace server.Controllers
         }
 
         [HttpDelete("deletePassword")]
-        public IActionResult DeletePassword([FromBody] PasswordDto passwordDto)
+        public async Task<IActionResult> DeletePassword([FromBody] PasswordDto passwordDto)
         {
             try
             {
-                bool deleted = passwordService.DeletePassword(passwordDto);
+                bool deleted = await passwordService.DeletePassword(passwordDto);
                 if (!deleted)
                 {
                     return BadRequest("Cannot delete password.");
@@ -71,11 +71,11 @@ namespace server.Controllers
         }
 
         [HttpPost("updatePassword")]
-        public IActionResult UpdatePassword([FromBody] PasswordDto passwordDto)
+        public async Task<IActionResult> UpdatePassword([FromBody] PasswordDto passwordDto)
         {
             try
             {
-                bool saved = passwordService.updatePassword(passwordDto);
+                bool saved = await passwordService.UpdatePassword(passwordDto);
                 if (!saved)
                 {
                     return BadRequest("Cannot update password");
