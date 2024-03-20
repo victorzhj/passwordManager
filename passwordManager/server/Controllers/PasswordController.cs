@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using server.Dto;
+using server.Services.Interfaces;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,36 +10,82 @@ namespace server.Controllers
     [ApiController]
     public class PasswordController : ControllerBase
     {
-        // GET: api/<PasswordController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private readonly IPasswordService passwordService;
+        public PasswordController(IPasswordService passwordService)
         {
-            return new string[] { "value1", "value2" };
+            this.passwordService = passwordService;
         }
 
-        // GET api/<PasswordController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("getPasswords")]
+        public IActionResult GetPasswords([FromBody] PasswordDto passwordDto)
         {
-            return "value";
+            try
+            {
+                var passwords = passwordService.GetPasswords(passwordDto);
+                if (passwords == null)
+                {
+                    return NotFound();
+                }
+                return Ok(passwords);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
-        // POST api/<PasswordController>
-        [HttpPost]
-        public void Post([FromBody] string value)
+        [HttpPost("addPassword")]
+        public IActionResult AddPassword([FromBody] PasswordDto passwordDto)
         {
+            try
+            {
+                bool saved = passwordService.AddPassword(passwordDto);
+                if (!saved)
+                {
+                    return BadRequest("Cannot add password");
+                }
+                return Ok("Password saved");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
-        // PUT api/<PasswordController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpDelete("deletePassword")]
+        public IActionResult DeletePassword([FromBody] PasswordDto passwordDto)
         {
+            try
+            {
+                bool deleted = passwordService.DeletePassword(passwordDto);
+                if (!deleted)
+                {
+                    return BadRequest("Cannot delete password.");
+                }
+                return Ok("Password deleted.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
-        // DELETE api/<PasswordController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpPost("updatePassword")]
+        public IActionResult UpdatePassword([FromBody] PasswordDto passwordDto)
         {
+            try
+            {
+                bool saved = passwordService.updatePassword(passwordDto);
+                if (!saved)
+                {
+                    return BadRequest("Cannot update password");
+                }
+                return Ok("Password updated");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
     }
 }

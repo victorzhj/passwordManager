@@ -2,9 +2,10 @@
 {
     public class Password
     {
-        int userId;
-        string? encryptedPassword;
-        string? salt;
-        string? site;
+        public int passwordId;
+        public int userId;
+        public string encryptedPassword;
+        public string salt;
+        public string site;
     }
 }
