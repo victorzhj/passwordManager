@@ -56,3 +56,54 @@ compile_commands.json
 *_qmlcache.qrc
 
 .vscode/
+
+# Binaries and build output
+bin/
+obj/
+
+# User-specific files
+.vs/
+*.user
+*.suo
+*.userosscache
+
+# Sensitive configuration files
+appsettings.json
+appsettings.Development.json
+
+# Packages directory
+packages/
+
+# ReSharper files
+_ReSharper*/
+*.ReSharper
+
+# TeamCity files
+_TeamCity*
+
+# TFS 2012 Local Workspace
+$tf/
+
+# Microsoft Visual Studio cache files
+# files ending in .cache can be ignored
+*.[Cc]ache
+# but keep track of directories ending in .cache
+!*.[Cc]ache/
+
+# Others
+ClientApp/node_modules/
+*.exe
+*.exe.config
+*.log
+*.psess
+*.vsp
+*.vspx
+*.pdb
+*.db
+*.idb
+*.bak
+*.swp
+*.opendb
+*.VC.db
+*.VC.VC.opendb
+.vs/
