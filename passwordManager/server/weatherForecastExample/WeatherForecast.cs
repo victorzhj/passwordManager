@@ -1,4 +1,4 @@
-namespace server.Models
+namespace server.weatherForecastExample
 {
     public class WeatherForecast
     {
