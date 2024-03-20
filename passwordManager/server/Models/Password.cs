@@ -3,9 +3,9 @@
     public class Password
     {
         public int passwordId;
-        public int userId;
-        public string encryptedPassword;
-        public string salt;
-        public string site;
+        public required int userId;
+        public required string encryptedPassword;
+        public required string salt;
+        public string? site;
     }
 }

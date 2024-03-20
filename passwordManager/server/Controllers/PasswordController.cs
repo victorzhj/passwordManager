@@ -21,7 +21,7 @@ namespace server.Controllers
         {
             try
             {
-                var passwords = passwordService.GetPasswords(passwordDto);
+                var passwords = await passwordService.GetPasswords(passwordDto);
                 if (passwords == null)
                 {
                     return NotFound();
