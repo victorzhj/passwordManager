@@ -16,6 +16,11 @@ namespace server.Services
             throw new NotImplementedException();
         }
 
+        public Task<string> GeneratePassword(PasswordDto passwordDto)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<List<PasswordDto>> GetPasswords([FromBody] PasswordDto passwordDto)
         {
             throw new NotImplementedException();
