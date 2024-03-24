@@ -52,10 +52,6 @@ namespace server.Controllers
         }
 
         [HttpPost("login")]
-        // This need two way communication. User loggings and server first send the salt 
-        // and then user sends the hashed password to the server.
-        // Server then compares the hashed password with the stored hashed password.
-        // If they match, server returns ok and the user is logged in.
         public IActionResult Login([FromBody] UserDto userDto)
         {
             try
