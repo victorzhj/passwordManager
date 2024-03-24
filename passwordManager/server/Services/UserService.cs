@@ -13,12 +13,17 @@ namespace server.Services
             throw new NotImplementedException();
         }
 
-        public User Login(UserDto user)
+        public string GetSalt(UserLoginDto userLoginDto)
         {
             throw new NotImplementedException();
         }
 
-        public User Register(UserDto user)
+        public User Login(UserDto userDto)
+        {
+            throw new NotImplementedException();
+        }
+
+        public User Register(UserCreationDto UserCreationDto)
         {
             throw new NotImplementedException();
         }

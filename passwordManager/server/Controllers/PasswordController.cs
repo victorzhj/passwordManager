@@ -14,7 +14,7 @@ namespace server.Controllers
             this.passwordService = passwordService;
         }
 
-        [HttpGet("getPasswords")]
+        [HttpGet()]
         public async Task<IActionResult> GetPasswords([FromBody] PasswordDto passwordDto)
         {
             try
@@ -32,7 +32,7 @@ namespace server.Controllers
             }
         }
 
-        [HttpPost("addPassword")]
+        [HttpPost()]
         public async Task<IActionResult> AddPassword([FromBody] PasswordDto passwordDto)
         {
             try
@@ -50,7 +50,7 @@ namespace server.Controllers
             }
         }
 
-        [HttpDelete("deletePassword")]
+        [HttpDelete()]
         public async Task<IActionResult> DeletePassword([FromBody] PasswordDto passwordDto)
         {
             try
@@ -68,7 +68,7 @@ namespace server.Controllers
             }
         }
 
-        [HttpPost("updatePassword")]
+        [HttpPost("update")]
         public async Task<IActionResult> UpdatePassword([FromBody] PasswordDto passwordDto)
         {
             try

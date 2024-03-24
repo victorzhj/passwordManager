@@ -16,11 +16,11 @@ namespace server.Controllers
         }
 
         [HttpPost("register")]
-        public IActionResult Register([FromBody] UserDto userDto)
+        public IActionResult Register([FromBody] UserCreationDto userCreationDto)
         {
             try
             {
-                var user = userService.Register(userDto);
+                var user = userService.Register(userCreationDto);
                 if (user == null)
                 {
                     return BadRequest("Registration failed");
@@ -33,8 +33,29 @@ namespace server.Controllers
             }
         }
 
+        [HttpPost("getSalt")]
+        public IActionResult GetSalt([FromBody] UserLoginDto userLoginDto)
+        {
+            try
+            {
+                var salt = userService.GetSalt(userLoginDto);
+                if (string.IsNullOrEmpty(salt))
+                {
+                    return BadRequest("User not found");
+                }
+                return Ok(salt);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
 
         [HttpPost("login")]
+        // This need two way communication. User loggings and server first send the salt 
+        // and then user sends the hashed password to the server.
+        // Server then compares the hashed password with the stored hashed password.
+        // If they match, server returns ok and the user is logged in.
         public IActionResult Login([FromBody] UserDto userDto)
         {
             try
@@ -52,7 +73,7 @@ namespace server.Controllers
             }
         }
 
-        [HttpDelete("deleteUser")]
+        [HttpDelete()]
         public IActionResult Delete([FromBody] UserDto userDto)
         {
             try
