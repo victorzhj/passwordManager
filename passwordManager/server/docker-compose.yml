@@ -1,0 +1,20 @@
+version: '3'
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: ${ENV_POSTGRES_DB}
+      POSTGRES_USER: ${ENV_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${ENV_POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+  web:
+    build: .
+    environment:
+      ConnectionStrings__Default: "Host=db;Database=mydatabase;Username=myuser;Password=mypassword"
+      ASPNETCORE_ENVIRONMENT: Development
+    ports:
+      - "8080:8080"
+      - "8081:8081"  
+    depends_on:
+      - db

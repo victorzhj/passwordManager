@@ -108,3 +108,4 @@ ClientApp/node_modules/
 *.VC.VC.opendb
 .vs/
 *.tmp
+.env

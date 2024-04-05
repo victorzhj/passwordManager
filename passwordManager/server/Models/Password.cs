@@ -1,11 +1,14 @@
-﻿namespace server.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace server.Models
 {
     public class Password
     {
-        public int passwordId;
-        public required int userId;
-        public required string encryptedPassword;
-        public required string salt;
-        public string? site;
+        [Key]
+        public int PasswordId { get; set; }
+        public required int UserId { get; set; }
+        public required string EncryptedPassword { get; set; }
+        public required string Salt { get; set; }
+        public string? Site { get; set; }
     }
 }
