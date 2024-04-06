@@ -1,20 +1,31 @@
 version: '3'
+
+networks:
+  dev:
+    driver: bridge
 services:
-  db:
-    image: postgres
+  serverDP:
+    container_name: serverDP
+    image: postgres:latest
     environment:
       POSTGRES_DB: ${ENV_POSTGRES_DB}
       POSTGRES_USER: ${ENV_POSTGRES_USER}
       POSTGRES_PASSWORD: ${ENV_POSTGRES_PASSWORD}
     ports:
-      - "5432:5432"
+      - 5432:5432
+    restart: always
+    networks: 
+      - dev
   web:
+    container_name: server  
     build: .
     environment:
-      ConnectionStrings__Default: "Host=db;Database=mydatabase;Username=myuser;Password=mypassword"
+      ConnectionStrings__Default: ${CONNECTION_STRING}
       ASPNETCORE_ENVIRONMENT: Development
     ports:
-      - "8080:8080"
-      - "8081:8081"  
+      - 8080:8080
+      - 8081:8081 
     depends_on:
-      - db
+      - serverDP
+    networks:
+      - dev
