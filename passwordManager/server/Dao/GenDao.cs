@@ -28,10 +28,10 @@ namespace server.Dao
         {
             return await _contextSet.FindAsync(id);
         }
-        public void AddAsync(TEntity entity)
+        public async Task AddAsync(TEntity entity)
         {
             _contextSet.Add(entity);
-            SaveChangesAsync();
+            await SaveChangesAsync();
         }
 
         public async Task<bool> DeleteAsync(int id)
@@ -58,7 +58,7 @@ namespace server.Dao
             return true;
         }
 
-        public async void UpdateAsync(TEntity entity)
+        public async Task UpdateAsync(TEntity entity)
         {
             _contextSet.Update(entity);
             await SaveChangesAsync();

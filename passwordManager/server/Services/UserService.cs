@@ -62,7 +62,7 @@ namespace server.Services
         // Doesn't need to return with MasterPasswordHashed
         public async Task<UserDto> Register(UserCreationDto UserCreationDto)
         {
-            _userDao.AddAsync(_mapper.Map<User>(UserCreationDto));
+            await _userDao.AddAsync(_mapper.Map<User>(UserCreationDto));
             var userDto = _mapper.Map<UserDto>(UserCreationDto);
             userDto.MasterPasswordHashed = null;
             return userDto;
