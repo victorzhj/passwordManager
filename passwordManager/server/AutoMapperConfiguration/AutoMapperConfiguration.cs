@@ -16,6 +16,8 @@ namespace server.AutoMapperConfiguration
             CreateMap<User, UserCreationDto>();
             CreateMap<Password, PasswordDto>();
             CreateMap<PasswordDto, Password>();
+            CreateMap<UserDto, UserCreationDto>();
+            CreateMap<UserCreationDto, UserDto>();
         }
     }
 }

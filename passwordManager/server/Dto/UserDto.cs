@@ -4,6 +4,6 @@
     {
         public int UserId { get; set; }
         public required string Username { get; set; }
-        public required string MasterPasswordHashed { get; set; }
+        public string? MasterPasswordHashed { get; set; }
     }
 }

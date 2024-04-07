@@ -38,12 +38,12 @@ namespace server.Controllers
         {
             try
             {
-                var salt = userService.GetSalt(userLoginDto);
-                if (string.IsNullOrEmpty(salt))
+                var UserLoginDtoWithSalt = userService.GetSalt(userLoginDto);
+                if (UserLoginDtoWithSalt == null)
                 {
                     return BadRequest("User not found");
                 }
-                return Ok(salt);
+                return Ok(UserLoginDtoWithSalt);
             }
             catch (Exception ex)
             {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using server.Data;
+using System.Linq.Expressions;
 
 namespace server.Dao
 {
@@ -12,9 +13,15 @@ namespace server.Dao
             _context = context;
             _contextSet = _context.Set<TEntity>();
         }
-        public async Task<List<TEntity>> GetAllAsync()
+        public async Task<List<TEntity>> GetAllAsync(
+            Expression<Func<TEntity, bool>> filter = null)
         {
-            return await _contextSet.ToListAsync(); 
+            IQueryable<TEntity> query = _contextSet;
+            if (filter != null)
+            {
+                return await query.Where(filter).ToListAsync();
+            }
+            return await query.ToListAsync(); 
         }
 
         public async Task<TEntity> GetByIdAsync(int id)
@@ -27,7 +34,7 @@ namespace server.Dao
             SaveChangesAsync();
         }
 
-        public bool DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
             var entity = _contextSet.Find(id);
             if (entity == null)
@@ -35,18 +42,31 @@ namespace server.Dao
                 return false;
             }
             _contextSet.Remove(entity);
-            SaveChangesAsync();
+            await SaveChangesAsync();
+            return true;
+        }
+        public async Task<bool> DeleteCustomAsync(Expression<Func<TEntity, bool>> filter)
+        {
+            IQueryable<TEntity> query = _contextSet;
+            var entities = await query.Where(filter).ToListAsync();
+            if (entities.Count == 0)
+            {
+                return false;
+            }
+            _contextSet.RemoveRange(entities);
+            await SaveChangesAsync();
             return true;
         }
 
-        public void UpdateAsync(TEntity entity)
+        public async void UpdateAsync(TEntity entity)
         {
             _contextSet.Update(entity);
-            SaveChangesAsync();
+            await SaveChangesAsync();
         }
         public Task SaveChangesAsync()
         {
             return _context.SaveChangesAsync();
         }
+
     }
 }
