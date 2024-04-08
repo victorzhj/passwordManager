@@ -27,7 +27,7 @@ namespace server.Services
             this._passwordDao = _passwordDao;
             _passwordService = passwordService;
         }
-        // Need to add the masterpassword to the password table
+
         public async Task<UsernameDto> Register(UserCreationDto userCreationDto)
         {
             var users = await _userDao.GetAllAsync(filter: (user) =>
@@ -70,7 +70,6 @@ namespace server.Services
             return userSaltDto;
         }
 
-        // needs to return with MasterPasswordHashed
         public async Task<UsernameDto> Login(UserLoginDto userLoginDto)
         {
             var users = await _userDao.GetAllAsync(filter: (user) => 
@@ -86,23 +85,7 @@ namespace server.Services
             }
             var usernameDto = _mapper.Map<UsernameDto>(users[0]);
             return usernameDto;
-            
-            /*
-            var user = await _userDao.GetByIdAsync(userDto.UserId);
-            var password = await _passwordDao.GetAllAsync(filter: (password) => 
-                password.UserId.Equals(userDto.UserId)
-                && password.IsMasterPassword == true);
-            if (password.Count == 0)
-            {
-                throw new ConflictException("Masterpassword not a match");
-            }
-            var tempUserDto = _mapper.Map<UserDto>(user);
-            tempUserDto.MasterPasswordHashed = password[0].EncryptedPassword;
-            return tempUserDto;
-            */
         }
-        // Doesn't need to return with MasterPasswordHashed
-
         public async Task<bool> Delete(UserDeletationDto userDeletationDto)
         {
             await _userDao.DeleteAsync(userDeletationDto.UserId);

@@ -1,29 +1,48 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using server.Dao;
 using server.Dto;
+using server.Dto.PasswordDtos;
+using server.Dto.UserDtos;
+using server.Models;
 using server.Services.Interfaces;
+using System.Linq;
 
 namespace server.Services
 {
+    
     public class PasswordService : IPasswordService
     {
-        public Task<bool> AddPassword(PasswordAddDto passwordAddDto)
+        private readonly IMapper _mapper;
+        private readonly IGenDao<Password> _passwordDao;
+        public PasswordService(
+            IMapper mapper, 
+            IGenDao<Password> passwordDao)
         {
-            throw new NotImplementedException();
+            this._mapper = mapper;
+            this._passwordDao = passwordDao;
+        }
+        public async Task<bool> AddPassword(PasswordAddDto passwordAddDto)
+        {
+            var password = await _passwordDao.AddAsync(_mapper.Map<Password>(passwordAddDto));
+            if (password == null)
+            {
+                return false;
+            }
+            return true;
         }
 
-        public Task<bool> DeletePassword(PasswordAddDto passwordDto)
+        public async Task<bool> DeletePassword(PasswordIdDto passwordIdDto)
         {
-            throw new NotImplementedException();
+            return await _passwordDao.DeleteAsync(passwordIdDto.PasswordId);
         }
 
-        public Task<string> GeneratePassword(PasswordAddDto passwordDto)
+        public async Task<List<PasswordAddDto>> GetPasswords(UsernameDto usernameDto)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<PasswordAddDto>> GetPasswords([FromBody] PasswordAddDto passwordDto)
-        {
-            throw new NotImplementedException();
+            var passwords = await _passwordDao.GetAllAsync(filter: (password) => 
+                password.UserId == usernameDto.UserId
+                && password.IsMasterPassword == false);
+            return passwords.Select(password => _mapper.Map<PasswordAddDto>(password)).ToList();
         }
 
         public Task<bool> UpdatePassword(PasswordAddDto passwordDto)
