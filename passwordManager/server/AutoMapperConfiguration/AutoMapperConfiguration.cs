@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using server.Dto;
+using server.Dto.UserDtos;
 using server.Models;
 
 namespace server.AutoMapperConfiguration
@@ -8,16 +9,22 @@ namespace server.AutoMapperConfiguration
     {
         public AutoMapperConfiguration()
         {
-            CreateMap<User, UserDto>();
-            CreateMap<UserDto, User>();
+            CreateMap<User, UserSaltDto>();
+            CreateMap<UserSaltDto, User>();
             CreateMap<UserLoginDto, User>();
             CreateMap<User, UserLoginDto>();
             CreateMap<UserCreationDto, User>();
             CreateMap<User, UserCreationDto>();
-            CreateMap<Password, PasswordDto>();
-            CreateMap<PasswordDto, Password>();
-            CreateMap<UserDto, UserCreationDto>();
-            CreateMap<UserCreationDto, UserDto>();
+            CreateMap<UserDeletationDto, User>();
+            CreateMap<User, UserDeletationDto>();
+            CreateMap<UsernameDto, User>();
+            CreateMap<User, UsernameDto>();
+            CreateMap<UsernameDto, UserCreationDto>();
+            CreateMap<UserCreationDto, UsernameDto>();
+            CreateMap<Password, PasswordAddDto>();
+            CreateMap<PasswordAddDto, Password>();
+            CreateMap<UserCreationDto, PasswordAddDto>();
+            CreateMap<PasswordAddDto, UserCreationDto>();
         }
     }
 }

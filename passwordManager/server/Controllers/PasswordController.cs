@@ -15,7 +15,7 @@ namespace server.Controllers
         }
 
         [HttpGet()]
-        public async Task<IActionResult> GetPasswords([FromBody] PasswordDto passwordDto)
+        public async Task<IActionResult> GetPasswords([FromBody] PasswordAddDto passwordDto)
         {
             try
             {
@@ -33,7 +33,7 @@ namespace server.Controllers
         }
 
         [HttpPost()]
-        public async Task<IActionResult> AddPassword([FromBody] PasswordDto passwordDto)
+        public async Task<IActionResult> AddPassword([FromBody] PasswordAddDto passwordDto)
         {
             try
             {
@@ -51,7 +51,7 @@ namespace server.Controllers
         }
 
         [HttpDelete()]
-        public async Task<IActionResult> DeletePassword([FromBody] PasswordDto passwordDto)
+        public async Task<IActionResult> DeletePassword([FromBody] PasswordAddDto passwordDto)
         {
             try
             {
@@ -69,7 +69,7 @@ namespace server.Controllers
         }
 
         [HttpPost("update")]
-        public async Task<IActionResult> UpdatePassword([FromBody] PasswordDto passwordDto)
+        public async Task<IActionResult> UpdatePassword([FromBody] PasswordAddDto passwordDto)
         {
             try
             {

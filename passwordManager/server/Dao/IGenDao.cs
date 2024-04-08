@@ -9,7 +9,7 @@ namespace server.Dao
             Expression<Func<TEntity, bool>> filter = null);
         Task<TEntity> GetByIdAsync(int id);
 
-        Task AddAsync(TEntity entity);
+        Task<TEntity> AddAsync(TEntity entity);
         Task<bool> DeleteAsync(int id);
         Task<bool> DeleteCustomAsync(Expression<Func<TEntity, bool>> filter);
         Task UpdateAsync(TEntity entity);

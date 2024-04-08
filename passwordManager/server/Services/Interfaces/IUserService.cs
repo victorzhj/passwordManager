@@ -1,13 +1,13 @@
 ﻿using server.Models;
-using server.Dto;
+using server.Dto.UserDtos;
 
 namespace server.Services.Interfaces
 {
     public interface IUserService
     {
-        public Task<UserDto> Register(UserCreationDto UserCreationDto);
-        public Task<UserLoginDto> GetSalt(UserLoginDto userLoginDto);
-        public Task<UserDto> Login(UserDto userDto);
-        public Task<UserDto> Delete(UserDto userDto);
+        public Task<UsernameDto> Register(UserCreationDto userCreationDto);
+        public Task<UserSaltDto> GetSalt(UsernameDto usernameDto);
+        public Task<UsernameDto> Login(UserLoginDto userLoginDto);
+        public Task Delete(UserDeletationDto userDeletationDto);
     }
 }

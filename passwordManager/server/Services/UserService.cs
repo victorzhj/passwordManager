@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using server.Dao;
 using server.Dto;
+using server.Dto.UserDtos;
 using server.Exceptions;
 using server.Models;
 using server.Services.Interfaces;
+using System.Security.Cryptography;
 
 namespace server.Services
 {
@@ -12,60 +14,100 @@ namespace server.Services
         private readonly IMapper _mapper;
         private readonly IGenDao<User> _userDao;
         private readonly IGenDao<Password> _passwordDao;
-        
+        private readonly IPasswordService _passwordService;
         public UserService(
             IMapper mapper,
             IGenDao<User> _userDao,
-            IGenDao<Password> _passwordDao
-            ) 
+            IGenDao<Password> _passwordDao,
+            IPasswordService passwordService
+            )
         {
             this._mapper = mapper;
             this._userDao = _userDao;
             this._passwordDao = _passwordDao;
+            _passwordService = passwordService;
+        }
+        // Need to add the masterpassword to the password table
+        public async Task<UsernameDto> Register(UserCreationDto userCreationDto)
+        {
+            var users = await _userDao.GetAllAsync(filter: (user) =>
+                user.Username.Equals(userCreationDto.Username));
+            if (users != null)
+            {
+                throw new ConflictException("Username already exists");
+            }
+            var user = await _userDao.AddAsync(_mapper.Map<User>(userCreationDto));
+            var passwordAddDto = new PasswordAddDto
+            {
+                UserId = user.UserId,
+                Salt = userCreationDto.Salt,
+                IsMasterPassword = true,
+                EncryptedPassword = userCreationDto.MasterPasswordHashed
+            }; 
+            
+            await _passwordService.AddPassword(passwordAddDto);
+            var usernameDto = _mapper.Map<UsernameDto>(userCreationDto);
+            usernameDto.UserId = user.UserId;
+            return usernameDto;
         }
 
-        public async Task<UserDto> Delete(UserDto userDto)
+        public async Task<UserSaltDto> GetSalt(UsernameDto usernameDto)
         {
-            await _userDao.DeleteAsync(userDto.UserId);
-            await _passwordDao.DeleteCustomAsync(filter: (password) => 
-                password.UserId.Equals(userDto.UserId));
-            return userDto;
-        }
-
-        public async Task<UserLoginDto> GetSalt(UserLoginDto userLoginDto)
-        {
-            var user = await _userDao.GetAllAsync(filter: (user) => 
-                           user.Username.Equals(userLoginDto.Username));
-            if (user.Count == 0)
+            var users = await _userDao.GetAllAsync(filter: (user) => 
+                user.Username.Equals(usernameDto.Username));
+            if (users.Count == 0)
             {
                 throw new NotFoundException("User not found");
             } 
-            var tempUserLoginDto = _mapper.Map<UserLoginDto>(user[0]);
-            return tempUserLoginDto;
+            var masterPassword = await _passwordDao.GetAllAsync(filter: (password) =>
+                password.UserId.Equals(users[0].UserId)
+                && password.IsMasterPassword == true);
+            var mastesPasswordSalt = masterPassword[0].Salt;
+            var userSaltDto = new UserSaltDto
+            {
+                Salt = mastesPasswordSalt
+            };
+            return userSaltDto;
         }
 
         // needs to return with MasterPasswordHashed
-        public async Task<UserDto> Login(UserDto userDto)
+        public async Task<UsernameDto> Login(UserLoginDto userLoginDto)
         {
+            var users = await _userDao.GetAllAsync(filter: (user) => 
+                           user.Username.Equals(userLoginDto.Username));
+            var userId = users[0].UserId; 
+            var masterPassword = await _passwordDao.GetAllAsync(filter: (password) =>
+                password.UserId.Equals(userId)
+                && password.IsMasterPassword == true
+                && password.EncryptedPassword == userLoginDto.MasterPasswordHashed);
+            if (masterPassword.Count == 0)
+            {
+                throw new ConflictException("Masterpassword not a match");
+            }
+            var usernameDto = _mapper.Map<UsernameDto>(users[0]);
+            return usernameDto;
+            
+            /*
             var user = await _userDao.GetByIdAsync(userDto.UserId);
             var password = await _passwordDao.GetAllAsync(filter: (password) => 
-                                      password.UserId.Equals(userDto.UserId)
-                                      && password.IsMasterPassword == true);
+                password.UserId.Equals(userDto.UserId)
+                && password.IsMasterPassword == true);
             if (password.Count == 0)
             {
-                throw new NotFoundException("Master password not found");
+                throw new ConflictException("Masterpassword not a match");
             }
             var tempUserDto = _mapper.Map<UserDto>(user);
             tempUserDto.MasterPasswordHashed = password[0].EncryptedPassword;
             return tempUserDto;
+            */
         }
         // Doesn't need to return with MasterPasswordHashed
-        public async Task<UserDto> Register(UserCreationDto UserCreationDto)
+
+        public async Task Delete(UserDeletationDto userDeletationDto)
         {
-            await _userDao.AddAsync(_mapper.Map<User>(UserCreationDto));
-            var userDto = _mapper.Map<UserDto>(UserCreationDto);
-            userDto.MasterPasswordHashed = null;
-            return userDto;
+            await _userDao.DeleteAsync(userDeletationDto.UserId);
+            await _passwordDao.DeleteCustomAsync(filter: (password) =>
+                password.UserId.Equals(userDeletationDto.UserId));
         }
     }
 }

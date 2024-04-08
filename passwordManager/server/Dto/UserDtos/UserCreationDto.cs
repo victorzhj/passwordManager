@@ -1,4 +1,4 @@
-﻿namespace server.Dto
+﻿namespace server.Dto.UserDtos
 {
     public class UserCreationDto
     {

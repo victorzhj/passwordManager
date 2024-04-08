@@ -1,9 +1,8 @@
-﻿namespace server.Dto
+﻿namespace server.Dto.UserDtos
 {
-    public class UserLoginDto
+    public class UsernameDto
     {
         public int? UserId { get; set; }
         public required string Username { get; set; }
-        public string? MasterPasswordSalt { get; set; }
     }
 }

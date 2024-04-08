@@ -1,11 +1,11 @@
 ﻿namespace server.Dto
 {
-    public class PasswordDto
+    public class PasswordAddDto
     {
-        public int PasswordId {  get; set; }
         public int UserId { get; set; }
         public required string EncryptedPassword { get; set; }
         public required string Salt { get; set; }
-        public required string Site { get; set; }
+        public string? Site { get; set; }
+        public bool IsMasterPassword { get; set; }
     }
 }

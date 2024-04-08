@@ -28,10 +28,11 @@ namespace server.Dao
         {
             return await _contextSet.FindAsync(id);
         }
-        public async Task AddAsync(TEntity entity)
+        public async Task<TEntity> AddAsync(TEntity entity)
         {
             _contextSet.Add(entity);
             await SaveChangesAsync();
+            return entity;
         }
 
         public async Task<bool> DeleteAsync(int id)
