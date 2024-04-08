@@ -8,6 +8,6 @@ namespace server.Services.Interfaces
         public Task<UsernameDto> Register(UserCreationDto userCreationDto);
         public Task<UserSaltDto> GetSalt(UsernameDto usernameDto);
         public Task<UsernameDto> Login(UserLoginDto userLoginDto);
-        public Task Delete(UserDeletationDto userDeletationDto);
+        public Task<bool> Delete(UserDeletationDto userDeletationDto);
     }
 }

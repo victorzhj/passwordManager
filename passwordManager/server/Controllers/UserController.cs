@@ -16,15 +16,11 @@ namespace server.Controllers
         }
 
         [HttpPost("register")]
-        public IActionResult Register([FromBody] UserCreationDto userCreationDto)
+        public async Task<IActionResult> Register([FromBody] UserCreationDto userCreationDto)
         {
             try
             {
-                var user = userService.Register(userCreationDto);
-                if (user == null)
-                {
-                    return BadRequest("Registration failed");
-                }
+                var user = await userService.Register(userCreationDto);
                 return Ok(user);
             }
             catch (Exception ex)
@@ -34,16 +30,12 @@ namespace server.Controllers
         }
 
         [HttpPost("getSalt")]
-        public IActionResult GetSalt([FromBody] UserLoginDto userLoginDto)
+        public async Task<IActionResult> GetSalt([FromBody] UsernameDto usernameDto)
         {
             try
             {
-                var UserLoginDtoWithSalt = userService.GetSalt(userLoginDto);
-                if (UserLoginDtoWithSalt == null)
-                {
-                    return BadRequest("User not found");
-                }
-                return Ok(UserLoginDtoWithSalt);
+                var salt = await userService.GetSalt(usernameDto);
+                return Ok(salt);
             }
             catch (Exception ex)
             {
@@ -52,15 +44,11 @@ namespace server.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromBody] UserSaltDto userDto)
+        public async Task<IActionResult> Login([FromBody] UserLoginDto userLoginDto)
         {
             try
             {
-                var user = userService.Login(userDto);
-                if (user == null)
-                {
-                    return BadRequest("Login failed");
-                }
+                var user = await userService.Login(userLoginDto);
                 return Ok(user);
             }
             catch (Exception ex)
@@ -70,16 +58,16 @@ namespace server.Controllers
         }
 
         [HttpDelete()]
-        public IActionResult Delete([FromBody] UserSaltDto userDto)
+        public async Task<IActionResult> Delete([FromBody] UserDeletationDto userDeletationDto)
         {
             try
             {
-                var user = userService.Delete(userDto);
-                if (user == null)
+                var deleted = await userService.Delete(userDeletationDto);
+                if (!deleted)
                 {
                     return BadRequest("Deleting user failed");
                 }
-                return Ok(user);
+                return Ok(deleted);
             }
             catch (Exception ex)
             {

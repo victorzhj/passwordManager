@@ -103,11 +103,12 @@ namespace server.Services
         }
         // Doesn't need to return with MasterPasswordHashed
 
-        public async Task Delete(UserDeletationDto userDeletationDto)
+        public async Task<bool> Delete(UserDeletationDto userDeletationDto)
         {
             await _userDao.DeleteAsync(userDeletationDto.UserId);
-            await _passwordDao.DeleteCustomAsync(filter: (password) =>
+            bool deleted = await _passwordDao.DeleteCustomAsync(filter: (password) =>
                 password.UserId.Equals(userDeletationDto.UserId));
+            return deleted;
         }
     }
 }

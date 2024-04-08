@@ -33,11 +33,11 @@ namespace server.Controllers
         }
 
         [HttpPost()]
-        public async Task<IActionResult> AddPassword([FromBody] PasswordAddDto passwordDto)
+        public async Task<IActionResult> AddPassword([FromBody] PasswordAddDto passwordAddDto)
         {
             try
             {
-                bool saved = await passwordService.AddPassword(passwordDto);
+                bool saved = await passwordService.AddPassword(passwordAddDto);
                 if (!saved)
                 {
                     return BadRequest("Cannot add password");
