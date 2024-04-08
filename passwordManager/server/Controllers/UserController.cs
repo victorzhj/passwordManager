@@ -29,12 +29,12 @@ namespace server.Controllers
             }
         }
 
-        [HttpPost("getSalt")]
-        public async Task<IActionResult> GetSalt([FromBody] UsernameDto usernameDto)
+        [HttpGet("getSalt")]
+        public async Task<IActionResult> GetSalt([FromQuery] string username)
         {
             try
             {
-                var salt = await userService.GetSalt(usernameDto);
+                var salt = await userService.GetSalt(username);
                 return Ok(salt);
             }
             catch (Exception ex)
@@ -44,7 +44,7 @@ namespace server.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] UserLoginDto userLoginDto)
+        public async Task<IActionResult> Login([FromQuery] UserLoginDto userLoginDto)
         {
             try
             {

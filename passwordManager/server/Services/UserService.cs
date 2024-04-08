@@ -32,7 +32,7 @@ namespace server.Services
         {
             var users = await _userDao.GetAllAsync(filter: (user) =>
                 user.Username.Equals(userCreationDto.Username));
-            if (users != null)
+            if (users.Count != 0)
             {
                 throw new ConflictException("Username already exists");
             }
@@ -51,10 +51,10 @@ namespace server.Services
             return usernameDto;
         }
 
-        public async Task<UserSaltDto> GetSalt(UsernameDto usernameDto)
+        public async Task<UserSaltDto> GetSalt(string username)
         {
             var users = await _userDao.GetAllAsync(filter: (user) => 
-                user.Username.Equals(usernameDto.Username));
+                user.Username.Equals(username));
             if (users.Count == 0)
             {
                 throw new NotFoundException("User not found");

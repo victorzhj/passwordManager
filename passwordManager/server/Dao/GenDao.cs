@@ -38,6 +38,7 @@ namespace server.Dao
         public async Task<bool> DeleteAsync(int id)
         {
             var entity = _contextSet.Find(id);
+            Console.WriteLine("HERE" + entity);
             if (entity == null)
             {
                 return false;

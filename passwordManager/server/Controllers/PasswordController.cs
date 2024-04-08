@@ -17,11 +17,11 @@ namespace server.Controllers
         }
 
         [HttpGet()]
-        public async Task<IActionResult> GetPasswords([FromBody] UsernameDto usernameDto)
+        public async Task<IActionResult> GetPasswords([FromQuery] int userId)
         {
             try
             {
-                var passwords = await passwordService.GetPasswords(usernameDto);
+                var passwords = await passwordService.GetPasswords(userId);
                 return Ok(passwords);
             }
             catch (Exception ex)

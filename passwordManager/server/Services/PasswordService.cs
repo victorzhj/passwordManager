@@ -37,10 +37,10 @@ namespace server.Services
             return await _passwordDao.DeleteAsync(passwordIdDto.PasswordId);
         }
 
-        public async Task<List<PasswordAddDto>> GetPasswords(UsernameDto usernameDto)
+        public async Task<List<PasswordAddDto>> GetPasswords(int userId)
         {
             var passwords = await _passwordDao.GetAllAsync(filter: (password) => 
-                password.UserId == usernameDto.UserId
+                password.UserId == userId
                 && password.IsMasterPassword == false);
             return passwords.Select(password => _mapper.Map<PasswordAddDto>(password)).ToList();
         }
