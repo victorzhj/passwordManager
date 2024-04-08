@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using server.Dto;
+using server.Dto.PasswordDtos;
+using server.Dto.UserDtos;
 using server.Services.Interfaces;
 
 namespace server.Controllers
@@ -15,15 +17,11 @@ namespace server.Controllers
         }
 
         [HttpGet()]
-        public async Task<IActionResult> GetPasswords([FromBody] PasswordAddDto passwordDto)
+        public async Task<IActionResult> GetPasswords([FromBody] UsernameDto usernameDto)
         {
             try
             {
-                var passwords = await passwordService.GetPasswords(passwordDto);
-                if (passwords == null)
-                {
-                    return NotFound();
-                }
+                var passwords = await passwordService.GetPasswords(usernameDto);
                 return Ok(passwords);
             }
             catch (Exception ex)
@@ -51,11 +49,11 @@ namespace server.Controllers
         }
 
         [HttpDelete()]
-        public async Task<IActionResult> DeletePassword([FromBody] PasswordAddDto passwordDto)
+        public async Task<IActionResult> DeletePassword([FromBody] PasswordIdDto passwordIdDto)
         {
             try
             {
-                bool deleted = await passwordService.DeletePassword(passwordDto);
+                bool deleted = await passwordService.DeletePassword(passwordIdDto);
                 if (!deleted)
                 {
                     return BadRequest("Cannot delete password.");
@@ -67,7 +65,8 @@ namespace server.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-
+        // TODO
+        [ApiExplorerSettings(IgnoreApi = true)]
         [HttpPost("update")]
         public async Task<IActionResult> UpdatePassword([FromBody] PasswordAddDto passwordDto)
         {

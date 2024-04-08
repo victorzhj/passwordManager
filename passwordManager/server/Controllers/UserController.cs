@@ -67,7 +67,7 @@ namespace server.Controllers
                 {
                     return BadRequest("Deleting user failed");
                 }
-                return Ok(deleted);
+                return Ok("User deleted");
             }
             catch (Exception ex)
             {
