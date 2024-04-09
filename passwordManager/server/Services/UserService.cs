@@ -37,7 +37,7 @@ namespace server.Services
                 throw new ConflictException("Username already exists");
             }
             var user = await _userDao.AddAsync(_mapper.Map<User>(userCreationDto));
-            var passwordAddDto = new PasswordAddDto
+            var masterPassword = new Password
             {
                 UserId = user.UserId,
                 Salt = userCreationDto.Salt,
@@ -45,7 +45,7 @@ namespace server.Services
                 EncryptedPassword = userCreationDto.MasterPasswordHashed
             }; 
             
-            await _passwordService.AddPassword(passwordAddDto);
+            await _passwordService.AddPassword(masterPassword);
             var usernameDto = _mapper.Map<UsernameDto>(userCreationDto);
             usernameDto.UserId = user.UserId;
             return usernameDto;

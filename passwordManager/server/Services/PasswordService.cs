@@ -31,6 +31,16 @@ namespace server.Services
             }
             return true;
         }
+        public async Task<bool> AddPassword(Password password)
+        {
+            var addedPassword = await _passwordDao.AddAsync(password);
+            if (addedPassword == null)
+            {
+                return false;
+            }
+            return true;
+        }
+
 
         public async Task<bool> DeletePassword(PasswordIdDto passwordIdDto)
         {
