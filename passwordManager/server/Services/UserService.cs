@@ -78,7 +78,7 @@ namespace server.Services
             return userSaltDto;
         }
 
-        public async Task<UsernameDto> Login(UserLoginDto userLoginDto)
+        public async Task<TokenDto> Login(UserLoginDto userLoginDto)
         {
             var users = await _userDao.GetAllAsync(filter: (user) => 
                            user.Username.Equals(userLoginDto.Username));
@@ -91,8 +91,15 @@ namespace server.Services
             {
                 throw new ConflictException("Masterpassword not a match");
             }
-            var usernameDto = _mapper.Map<UsernameDto>(users[0]);
-            return usernameDto;
+            var DerivedKeySalt = users[0].DerivedKeySalt;
+            var token = GenerateJwtToken(users[0]);
+            var tokenDto = new TokenDto
+            {
+                AccessToken = token.Item1,
+                DerivedKeySalt = DerivedKeySalt,
+                ExpiresIn = token.Item2
+            };
+            return tokenDto;
         }
         public async Task<bool> Delete(UserDeletationDto userDeletationDto)
         {
@@ -101,8 +108,16 @@ namespace server.Services
                 password.UserId.Equals(userDeletationDto.UserId));
             return deleted;
         }
-        private string GenerateJwtToken(User user)
+
+        public string GetUserId(ClaimsPrincipal user)
         {
+            var userIdClaim = user.FindFirst(JwtRegisteredClaimNames.Sub);
+            return userIdClaim?.Value;
+        }
+
+        private (string, int) GenerateJwtToken(User user)
+        {
+            var expireTime = 30;
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
@@ -113,11 +128,12 @@ namespace server.Services
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
+                audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(30),
+                expires: DateTime.Now.AddMinutes(expireTime),
                 signingCredentials: creds);
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return (new JwtSecurityTokenHandler().WriteToken(token), expireTime);
         }
 
     }
