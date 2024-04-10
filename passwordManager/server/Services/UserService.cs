@@ -1,11 +1,16 @@
 ﻿using AutoMapper;
+using Microsoft.IdentityModel.Tokens;
 using server.Dao;
 using server.Dto;
 using server.Dto.UserDtos;
 using server.Exceptions;
 using server.Models;
 using server.Services.Interfaces;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Text;
+
 
 namespace server.Services
 {
@@ -15,13 +20,16 @@ namespace server.Services
         private readonly IGenDao<User> _userDao;
         private readonly IGenDao<Password> _passwordDao;
         private readonly IPasswordService _passwordService;
+        private readonly IConfiguration _configuration;
         public UserService(
+            IConfiguration configuration,
             IMapper mapper,
             IGenDao<User> _userDao,
             IGenDao<Password> _passwordDao,
             IPasswordService passwordService
             )
         {
+            this._configuration = configuration;
             this._mapper = mapper;
             this._userDao = _userDao;
             this._passwordDao = _passwordDao;
@@ -93,5 +101,24 @@ namespace server.Services
                 password.UserId.Equals(userDeletationDto.UserId));
             return deleted;
         }
+        private string GenerateJwtToken(User user)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
+                new Claim(JwtRegisteredClaimNames.UniqueName, user.Username)
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(30),
+                signingCredentials: creds);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
     }
 }

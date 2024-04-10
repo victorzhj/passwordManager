@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using server.Dto;
 using server.Dto.PasswordDtos;
 using server.Dto.UserDtos;
@@ -17,6 +18,7 @@ namespace server.Controllers
         }
 
         [HttpGet()]
+        [Authorize]
         public async Task<IActionResult> GetPasswords([FromQuery] int userId)
         {
             try
@@ -31,6 +33,7 @@ namespace server.Controllers
         }
 
         [HttpPost()]
+        [Authorize]
         public async Task<IActionResult> AddPassword([FromBody] PasswordAddDto passwordAddDto)
         {
             try
@@ -49,6 +52,7 @@ namespace server.Controllers
         }
 
         [HttpDelete()]
+        [Authorize]
         public async Task<IActionResult> DeletePassword([FromBody] PasswordIdDto passwordIdDto)
         {
             try
@@ -68,6 +72,7 @@ namespace server.Controllers
         // TODO
         [ApiExplorerSettings(IgnoreApi = true)]
         [HttpPost("update")]
+        [Authorize]
         public async Task<IActionResult> UpdatePassword([FromBody] PasswordAddDto passwordDto)
         {
             try

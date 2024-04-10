@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using server.Dto.UserDtos;
 using server.Services.Interfaces;
@@ -14,7 +15,7 @@ namespace server.Controllers
         {
             this.userService = userService;
         }
-
+        
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserCreationDto userCreationDto)
         {
@@ -58,6 +59,7 @@ namespace server.Controllers
         }
 
         [HttpDelete()]
+        [Authorize]
         public async Task<IActionResult> Delete([FromBody] UserDeletationDto userDeletationDto)
         {
             try
