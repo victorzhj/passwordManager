@@ -101,18 +101,12 @@ namespace server.Services
             };
             return tokenDto;
         }
-        public async Task<bool> Delete(UserDeletationDto userDeletationDto)
+        public async Task<bool> Delete(int userId)
         {
-            await _userDao.DeleteAsync(userDeletationDto.UserId);
+            await _userDao.DeleteAsync(userId);
             bool deleted = await _passwordDao.DeleteCustomAsync(filter: (password) =>
-                password.UserId.Equals(userDeletationDto.UserId));
+                password.UserId.Equals(userId));
             return deleted;
-        }
-
-        public string GetUserId(ClaimsPrincipal user)
-        {
-            var userIdClaim = user.FindFirst(JwtRegisteredClaimNames.Sub);
-            return userIdClaim?.Value;
         }
 
         private (string, int) GenerateJwtToken(User user)
@@ -129,11 +123,12 @@ namespace server.Services
 
             var token = new JwtSecurityToken(
                 audience: _configuration["Jwt:Audience"],
+                issuer: _configuration["Jwt:Issuer"],
                 claims: claims,
                 expires: DateTime.Now.AddMinutes(expireTime),
                 signingCredentials: creds);
 
-            return (new JwtSecurityTokenHandler().WriteToken(token), expireTime);
+            return (new JwtSecurityTokenHandler().WriteToken(token), expireTime * 60);
         }
 
     }

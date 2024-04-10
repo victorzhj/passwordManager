@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using server.Dto;
+using server.Dto.PasswordDtos;
 using server.Dto.UserDtos;
 using server.Models;
 
@@ -25,6 +26,8 @@ namespace server.AutoMapperConfiguration
             CreateMap<PasswordAddDto, Password>();
             CreateMap<UserCreationDto, PasswordAddDto>();
             CreateMap<PasswordAddDto, UserCreationDto>();
+            CreateMap<Password, PasswordDetailsDto>();
+            CreateMap<PasswordDetailsDto, Password>();
         }
     }
 }

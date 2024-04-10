@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using server.Dto.UserDtos;
 using server.Services.Interfaces;
+using System.Security.Claims;
 
 namespace server.Controllers
 {
@@ -60,11 +61,13 @@ namespace server.Controllers
 
         [HttpDelete()]
         [Authorize]
-        public async Task<IActionResult> Delete([FromBody] UserDeletationDto userDeletationDto)
+        public async Task<IActionResult> Delete()
         {
             try
-            {
-                var deleted = await userService.Delete(userDeletationDto);
+            {   
+                var userId = GetUserId();
+                //userDeletationDto.UserId = userId;
+                var deleted = await userService.Delete(userId);
                 if (!deleted)
                 {
                     return BadRequest("Deleting user failed");
@@ -75,6 +78,11 @@ namespace server.Controllers
             {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
+        }
+        private int GetUserId()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            return int.Parse(userIdClaim.Value);
         }
     }
     

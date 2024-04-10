@@ -41,18 +41,19 @@ namespace server.Services
             return true;
         }
 
-
-        public async Task<bool> DeletePassword(PasswordIdDto passwordIdDto)
+        public async Task<bool> DeletePassword(PasswordIdDto passwordIdDto, int userId)
         {
-            return await _passwordDao.DeleteAsync(passwordIdDto.PasswordId);
+            return await _passwordDao.DeleteCustomAsync(filter: (password) => 
+                password.UserId == userId
+                && password.PasswordId == passwordIdDto.PasswordId);
         }
 
-        public async Task<List<PasswordAddDto>> GetPasswords(int userId)
+        public async Task<List<PasswordDetailsDto>> GetPasswords(int userId)
         {
             var passwords = await _passwordDao.GetAllAsync(filter: (password) => 
                 password.UserId == userId
                 && password.IsMasterPassword == false);
-            return passwords.Select(password => _mapper.Map<PasswordAddDto>(password)).ToList();
+            return passwords.Select(password => _mapper.Map<PasswordDetailsDto>(password)).ToList();
         }
 
         public Task<bool> UpdatePassword(PasswordAddDto passwordDto)

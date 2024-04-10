@@ -4,6 +4,8 @@ using server.Dto;
 using server.Dto.PasswordDtos;
 using server.Dto.UserDtos;
 using server.Services.Interfaces;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace server.Controllers
 {
@@ -19,11 +21,11 @@ namespace server.Controllers
 
         [HttpGet()]
         [Authorize]
-        public async Task<IActionResult> GetPasswords([FromQuery] int userId)
+        public async Task<IActionResult> GetPasswords()
         {
             try
             {
-                var passwords = await passwordService.GetPasswords(userId);
+                var passwords = await passwordService.GetPasswords(GetUserId());
                 return Ok(passwords);
             }
             catch (Exception ex)
@@ -38,6 +40,7 @@ namespace server.Controllers
         {
             try
             {
+                passwordAddDto.UserId = GetUserId();
                 bool saved = await passwordService.AddPassword(passwordAddDto);
                 if (!saved)
                 {
@@ -57,7 +60,7 @@ namespace server.Controllers
         {
             try
             {
-                bool deleted = await passwordService.DeletePassword(passwordIdDto);
+                bool deleted = await passwordService.DeletePassword(passwordIdDto, GetUserId());
                 if (!deleted)
                 {
                     return BadRequest("Cannot delete password.");
@@ -88,6 +91,12 @@ namespace server.Controllers
             {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
+        }
+
+        private int GetUserId()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            return int.Parse(userIdClaim.Value);
         }
     }
 }
