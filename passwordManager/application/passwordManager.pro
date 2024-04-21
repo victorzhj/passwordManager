@@ -10,14 +10,19 @@ CONFIG += c++17
 
 SOURCES += \
     controllers/authenticationController.cpp \
+    controllers/passwordcreationcontroller.cpp \
     main.cpp \
     mainwindow.cpp \
-    models/authenticationModel.cpp
+    models/authenticationModel.cpp \
+    models/passwordcreationmodel.cpp
+
 
 HEADERS += \
     controllers/authenticationController.h \
+    controllers/passwordcreationcontroller.h \
     mainwindow.h \
-    models/authenticationModel.h
+    models/authenticationModel.h \
+    models/passwordcreationmodel.h
 
 FORMS += \
     mainwindow.ui
