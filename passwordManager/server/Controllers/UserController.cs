@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using server.Dto;
+using server.Dto.UserDtos;
 using server.Services.Interfaces;
+using System.Security.Claims;
 
 namespace server.Controllers
 {
@@ -14,17 +16,13 @@ namespace server.Controllers
         {
             this.userService = userService;
         }
-
+        
         [HttpPost("register")]
-        public IActionResult Register([FromBody] UserDto userDto)
+        public async Task<IActionResult> Register([FromBody] UserCreationDto userCreationDto)
         {
             try
             {
-                var user = userService.Register(userDto);
-                if (user == null)
-                {
-                    return BadRequest("Registration failed");
-                }
+                var user = await userService.Register(userCreationDto);
                 return Ok(user);
             }
             catch (Exception ex)
@@ -33,17 +31,26 @@ namespace server.Controllers
             }
         }
 
-
-        [HttpPost("login")]
-        public IActionResult Login([FromBody] UserDto userDto)
+        [HttpGet("getSalt")]
+        public async Task<IActionResult> GetSalt([FromQuery] string username)
         {
             try
             {
-                var user = userService.Login(userDto);
-                if (user == null)
-                {
-                    return BadRequest("Login failed");
-                }
+                var salt = await userService.GetSalt(username);
+                return Ok(salt);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("login")]
+        public async Task<IActionResult> Login([FromQuery] UserLoginDto userLoginDto)
+        {
+            try
+            {
+                var user = await userService.Login(userLoginDto);
                 return Ok(user);
             }
             catch (Exception ex)
@@ -52,22 +59,30 @@ namespace server.Controllers
             }
         }
 
-        [HttpDelete("deleteUser")]
-        public IActionResult Delete([FromBody] UserDto userDto)
+        [HttpDelete()]
+        [Authorize]
+        public async Task<IActionResult> Delete()
         {
             try
-            {
-                var user = userService.Delete(userDto);
-                if (user == null)
+            {   
+                var userId = GetUserId();
+                //userDeletationDto.UserId = userId;
+                var deleted = await userService.Delete(userId);
+                if (!deleted)
                 {
                     return BadRequest("Deleting user failed");
                 }
-                return Ok(user);
+                return Ok("User deleted");
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
+        }
+        private int GetUserId()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            return int.Parse(userIdClaim.Value);
         }
     }
     

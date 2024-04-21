@@ -1,0 +1,36 @@
+version: '3'
+
+networks:
+  dev:
+    driver: bridge
+services:
+  serverDP:
+    container_name: serverDP
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: ${ENV_POSTGRES_DB}
+      POSTGRES_USER: ${ENV_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${ENV_POSTGRES_PASSWORD}
+    ports:
+      - 5432:5432
+    restart: always
+    networks: 
+      - dev
+  web:
+    container_name: server  
+    build: .
+    environment:
+      ConnectionStrings__Default: ${CONNECTION_STRING}
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: https://+:443;http://+:80
+      ASPNETCORE_Kestrel__Certificates__Default__Password: ${CERT_PASSWORD}
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/server.pfx
+    volumes:
+      - ~/.aspnet/https:/https:ro
+    ports:
+      - 8080:80
+      - 8081:443 
+    depends_on:
+      - serverDP
+    networks:
+      - dev

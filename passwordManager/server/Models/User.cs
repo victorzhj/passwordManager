@@ -1,11 +1,12 @@
-﻿namespace server.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace server.Models
 {
     public class User
     {
+        [Key]
         public int UserId { get; set; }
-        public string Username { get; set; }
-        public string EncryptedMasterPassword { get; set; }
-        public string Salt { get; set; }
-        public string derivedKeySalt { get; set; }
+        public required string Username { get; set; }
+        public required string DerivedKeySalt { get; set; }
     }
 }
