@@ -20,35 +20,14 @@
       <x>150</x>
       <y>120</y>
       <width>291</width>
-      <height>171</height>
+      <height>238</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="2" column="0">
-      <widget class="QPushButton" name="logInButton">
-       <property name="text">
-        <string>Log in</string>
-       </property>
-      </widget>
-     </item>
      <item row="3" column="0">
-      <widget class="QPushButton" name="forgotPasswordButton">
-       <property name="text">
-        <string>Forgot password</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0">
       <widget class="QPushButton" name="signInButton">
        <property name="text">
         <string>Sign in</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0">
-      <widget class="QPlainTextEdit" name="userNameInput">
-       <property name="placeholderText">
-        <string>user name</string>
        </property>
       </widget>
      </item>
@@ -59,6 +38,20 @@
        </property>
        <property name="placeholderText">
         <string>password</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QPlainTextEdit" name="userNameInput">
+       <property name="placeholderText">
+        <string>user name</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QPushButton" name="logInButton">
+       <property name="text">
+        <string>Log in</string>
        </property>
       </widget>
      </item>

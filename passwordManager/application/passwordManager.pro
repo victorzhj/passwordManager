@@ -1,4 +1,5 @@
 QT       += core gui
+QT       += network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -10,19 +11,25 @@ CONFIG += c++17
 
 SOURCES += \
     controllers/authenticationController.cpp \
-    controllers/passwordcreationcontroller.cpp \
+    controllers/networkercontroller.cpp \
+    controllers/passwordManagementcontroller.cpp \
     main.cpp \
     mainwindow.cpp \
     models/authenticationModel.cpp \
-    models/passwordcreationmodel.cpp
+    models/networkermodel.cpp \
+    models/passwordManagementmodel.cpp
 
 
 HEADERS += \
     controllers/authenticationController.h \
-    controllers/passwordcreationcontroller.h \
+    controllers/networkercontroller.h \
+    controllers/passwordManagementcontroller.h \
     mainwindow.h \
     models/authenticationModel.h \
-    models/passwordcreationmodel.h
+    models/networkermodel.h \
+    structs/password.h \
+    models/passwordManagementmodel.h \
+    structs/user.h
 
 FORMS += \
     mainwindow.ui

@@ -45,8 +45,8 @@ namespace server.Controllers
             }
         }
 
-        [HttpGet("login")]
-        public async Task<IActionResult> Login([FromQuery] UserLoginDto userLoginDto)
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] UserLoginDto userLoginDto)
         {
             try
             {

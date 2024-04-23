@@ -18,3 +18,8 @@ void MainWindow::on_signInButton_clicked()
 
 }
 
+void MainWindow::on_logInButton_clicked()
+{
+
+}
+
