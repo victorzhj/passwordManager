@@ -1,5 +1,5 @@
-#ifndef NETWORKERMODEL_H
-#define NETWORKERMODEL_H
+#ifndef NETWORKER_H
+#define NETWORKER_H
 
 #include <QString.h>
 #include <QMap>
@@ -16,10 +16,10 @@
 #include "structs/password.h"
 #include "structs/user.h"
 
-class NetworkerModel : public QObject
+class Networker : public QObject
 {
 public:
-    NetworkerModel();
+    Networker();
     QString login(const User &user);
     QString registerUser(const User &user);
     QString getSalt(const User &user);
@@ -45,4 +45,4 @@ private:
 
 };
 
-#endif // NETWORKERMODEL_H
+#endif // NETWORKER_H

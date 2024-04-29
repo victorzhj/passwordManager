@@ -11,25 +11,24 @@ CONFIG += c++17
 
 SOURCES += \
     controllers/authenticationController.cpp \
-    controllers/networkercontroller.cpp \
     controllers/passwordManagementcontroller.cpp \
     main.cpp \
     mainwindow.cpp \
     models/authenticationModel.cpp \
-    models/networkermodel.cpp \
-    models/passwordManagementmodel.cpp
+    models/passwordManagementmodel.cpp \
+    utils/networker.cpp
+    utils
 
 
 HEADERS += \
     controllers/authenticationController.h \
-    controllers/networkercontroller.h \
     controllers/passwordManagementcontroller.h \
     mainwindow.h \
     models/authenticationModel.h \
-    models/networkermodel.h \
     structs/password.h \
     models/passwordManagementmodel.h \
-    structs/user.h
+    structs/user.h \
+    utils/networker.h
 
 FORMS += \
     mainwindow.ui

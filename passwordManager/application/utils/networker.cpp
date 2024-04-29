@@ -1,6 +1,6 @@
-#include "networkermodel.h"
+#include "networker.h"
 
-NetworkerModel::NetworkerModel() {
+Networker::Networker() {
     _baseUrl = "https://localhost:8081/api/";
     _userUrl = "User/";
     _passwordUrl = "Password";
@@ -9,7 +9,7 @@ NetworkerModel::NetworkerModel() {
     _expectedSslErrors.append(error);
 }
 
-QString NetworkerModel::login(const User &user)
+QString Networker::login(const User &user)
 {
     QString replyString;
     QUrl url = _baseUrl + _userUrl + "login";
@@ -41,7 +41,7 @@ QString NetworkerModel::login(const User &user)
     return replyString;
 }
 
-QString NetworkerModel::registerUser(const User &user)
+QString Networker::registerUser(const User &user)
 {
     QString replyString;
     QUrl url = _baseUrl + _userUrl +  "register";
@@ -71,7 +71,7 @@ QString NetworkerModel::registerUser(const User &user)
     return replyString;
 }
 
-QString NetworkerModel::getSalt(const User &user)
+QString Networker::getSalt(const User &user)
 {
     QString replyString;
     QUrl url = _baseUrl + _userUrl + "getSalt";
@@ -106,7 +106,7 @@ QString NetworkerModel::getSalt(const User &user)
     return replyString;
 }
 
-QString NetworkerModel::deleteUser(const User &user)
+QString Networker::deleteUser(const User &user)
 {
     QString replyString;
     QUrl url = _baseUrl + _userUrl;
@@ -140,7 +140,7 @@ QString NetworkerModel::deleteUser(const User &user)
     return replyString;
 }
 
-QString NetworkerModel::getPasswords(const User &user)
+QString Networker::getPasswords(const User &user)
 {
     QString replyString;
     QUrl url = _baseUrl + _passwordUrl;
@@ -174,7 +174,7 @@ QString NetworkerModel::getPasswords(const User &user)
     return replyString;
 }
 
-QString NetworkerModel::postPassword(const User &user, const Password &password)
+QString Networker::postPassword(const User &user, const Password &password)
 {
     QString replyString;
     QUrl url = _baseUrl + _passwordUrl;
@@ -208,7 +208,7 @@ QString NetworkerModel::postPassword(const User &user, const Password &password)
     return replyString;
 }
 
-QString NetworkerModel::deletePassword(const User &user, const Password &password)
+QString Networker::deletePassword(const User &user, const Password &password)
 {
     QString replyString;
     QUrl url = _baseUrl + _passwordUrl;
@@ -245,7 +245,7 @@ QString NetworkerModel::deletePassword(const User &user, const Password &passwor
     return replyString;
 }
 
-QJsonObject NetworkerModel::loginJson(const User &user)
+QJsonObject Networker::loginJson(const User &user)
 {
     QJsonObject json;
     json["username"] = user.username;
@@ -253,7 +253,7 @@ QJsonObject NetworkerModel::loginJson(const User &user)
     return json;
 }
 
-QJsonObject NetworkerModel::registerJson(const User &user)
+QJsonObject Networker::registerJson(const User &user)
 {
     QJsonObject json;
     json["username"] = user.username;
@@ -263,7 +263,7 @@ QJsonObject NetworkerModel::registerJson(const User &user)
     return json;
 }
 
-QJsonObject NetworkerModel::postPasswordJson(const User &user, const Password &password)
+QJsonObject Networker::postPasswordJson(const User &user, const Password &password)
 {
     QJsonObject json;
     json["userId"] = user.userId;

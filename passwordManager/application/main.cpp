@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 
 #include <QApplication>
-#include "models/networkermodel.h"
+#include "utils/networker.h"
 #include "structs/user.h"
 
 int main(int argc, char *argv[])
@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
     user.masterPasswordHashed = "string";
     user.salt = "string";
     user.token = "string";
-    NetworkerModel net;
+    Networker net;
     net.registerUser(user);
     w.show();
 
