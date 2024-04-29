@@ -41,6 +41,7 @@ private:
     QString _passwordUrl;
     QMap<QString, QString> _urls;
     QString _token;
+    QList<QSslError> _expectedSslErrors;
 
 };
 

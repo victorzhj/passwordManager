@@ -41,11 +41,11 @@ namespace server.Services
             return true;
         }
 
-        public async Task<bool> DeletePassword(PasswordIdDto passwordIdDto, int userId)
+        public async Task<bool> DeletePassword(string passwordId, int userId)
         {
             return await _passwordDao.DeleteCustomAsync(filter: (password) => 
                 password.UserId == userId
-                && password.PasswordId == passwordIdDto.PasswordId);
+                && password.PasswordId.ToString() == passwordId);
         }
 
         public async Task<List<PasswordDetailsDto>> GetPasswords(int userId)

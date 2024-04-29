@@ -11,7 +11,7 @@ namespace server.Services.Interfaces
         public Task<List<PasswordDetailsDto>> GetPasswords(int userId);
         public Task<bool> AddPassword(PasswordAddDto passwordAddDto);
         public Task<bool> AddPassword(Password password);
-        public Task<bool> DeletePassword(PasswordIdDto passwordIdDto, int userId);
+        public Task<bool> DeletePassword(string passwordIdDto, int userId);
         public Task<bool> UpdatePassword(PasswordAddDto passwordDto);
     }
 }

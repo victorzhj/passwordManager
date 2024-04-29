@@ -33,6 +33,7 @@ Makefile*
 *.prl
 *.pro.user
 build*
+*.pem
 
 # Qt unit tests
 target_wrapper.*

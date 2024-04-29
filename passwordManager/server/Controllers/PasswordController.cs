@@ -56,11 +56,11 @@ namespace server.Controllers
 
         [HttpDelete()]
         [Authorize]
-        public async Task<IActionResult> DeletePassword([FromBody] PasswordIdDto passwordIdDto)
+        public async Task<IActionResult> DeletePassword([FromQuery] string passwordId)
         {
             try
             {
-                bool deleted = await passwordService.DeletePassword(passwordIdDto, GetUserId());
+                bool deleted = await passwordService.DeletePassword(passwordId, GetUserId());
                 if (!deleted)
                 {
                     return BadRequest("Cannot delete password.");
