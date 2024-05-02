@@ -21,6 +21,16 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddControllers();
 
+builder.Services.AddCors(options => 
+{
+    options.AddPolicy("reactApp", policyBuilder =>
+    {
+        policyBuilder.WithOrigins("http://localhost:3000")
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options => {
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
@@ -67,5 +77,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors("reactApp");
 
 app.Run();

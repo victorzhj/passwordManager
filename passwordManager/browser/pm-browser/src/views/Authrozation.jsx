@@ -10,11 +10,13 @@ function Authrozation({ onLogin }) {
 
     const baseUrl = "https://localhost:8081/api/";
 
-    const handleLogin = () => {
+    const handleLogin = (event) => {
+        event.preventDefault();
         fetch(baseUrl + "User/getSalt?username=" + username)
         .then((response) => {
             if (!response.ok) {
                 toast.error("Login failed")
+                console.log(response);
             } else {
                 toast.success("Login successful")
             }
@@ -48,9 +50,14 @@ function Authrozation({ onLogin }) {
         );
     }
 
-    const handleSignUp = () => {
+    const handleSignUp = (event) => {
+        event.preventDefault();
         const salt = generateSalt();
         const deviredKeySalt = generateSalt();
+        console.log(salt, "salt");
+        console.log(deviredKeySalt, "deviredKeySalt");
+        console.log(signUpName, "signUpName");
+        console.log(signUpPassword, "signUpPassword")
         fetch(baseUrl + "User/register", {
             method: "POST",
             headers: {
@@ -90,7 +97,7 @@ function Authrozation({ onLogin }) {
                     <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} /><br />
                     <label>Password</label><br />
                     <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} /><br />
-                    <button onClick={handleLogin}>Login</button>    
+                    <button onClick={handleLogin}>Login</button>
                 </form>
             </div>
             <div>
