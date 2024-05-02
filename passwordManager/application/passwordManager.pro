@@ -16,7 +16,9 @@ SOURCES += \
     mainwindow.cpp \
     models/authenticationModel.cpp \
     models/passwordManagementmodel.cpp \
-    utils/networker.cpp
+    utils/jsonparser.cpp \
+    utils/networker.cpp \
+    utils/securify.cpp
     utils
 
 
@@ -28,10 +30,15 @@ HEADERS += \
     structs/password.h \
     models/passwordManagementmodel.h \
     structs/user.h \
-    utils/networker.h
+    utils/jsonparser.h \
+    utils/networker.h \
+    utils/securify.h
 
 FORMS += \
     mainwindow.ui
+
+INCLUDEPATH += C:\Qt\Tools\OpenSSLv3\Win_x64\include
+LIBS += -LC:\Qt\Tools\OpenSSLv3\Win_x64\lib -lssl -lcrypto
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

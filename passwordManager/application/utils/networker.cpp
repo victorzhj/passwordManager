@@ -22,9 +22,7 @@ QString Networker::login(const User &user)
     reply->ignoreSslErrors(_expectedSslErrors);
 
     loop.exec();
-    if (reply->error() == QNetworkReply::ContentNotFoundError) {
-        return "NOMATCH";
-    }
+    int httpStatusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 
     if (reply->error() == QNetworkReply::NoError) {
         replyString = reply->readAll();
@@ -38,6 +36,9 @@ QString Networker::login(const User &user)
     replyString = reply->readAll();
     delete reply;
     delete manager;
+    if (httpStatusCode == 500) {
+        return "ERROR";
+    }
     return replyString;
 }
 
@@ -53,21 +54,25 @@ QString Networker::registerUser(const User &user)
     QNetworkReply *reply = manager->post(request, QJsonDocument(registerJson(user)).toJson());
     reply->ignoreSslErrors(_expectedSslErrors);
     loop.exec();
-    if (reply->error() == QNetworkReply::ContentNotFoundError) {
-        return "NOMATCH";
-    }
+    int httpStatusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 
     if (reply->error() == QNetworkReply::NoError) {
         replyString = reply->readAll();
         qDebug() << replyString;
     } else {
         qDebug() << reply->errorString();
+
+        qDebug() << "HTTP status code:" << httpStatusCode;
         qDebug() << "TEST";
         return "NOMATCH";
     }
+
     replyString = reply->readAll();
     delete reply;
     delete manager;
+    if (httpStatusCode == 500) {
+        return "ERROR";
+    }
     return replyString;
 }
 
@@ -90,6 +95,7 @@ QString Networker::getSalt(const User &user)
 
     // Start the loop to wait for the finished signal
     loop.exec();
+    int httpStatusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 
     if (reply->error() == QNetworkReply::NoError) {
         replyString = reply->readAll();
@@ -102,7 +108,9 @@ QString Networker::getSalt(const User &user)
 
     delete reply;
     delete manager;
-
+    if (httpStatusCode == 500) {
+        return "ERROR";
+    }
     return replyString;
 }
 
@@ -124,6 +132,7 @@ QString Networker::deleteUser(const User &user)
 
     // Start the loop to wait for the finished signal
     loop.exec();
+    int httpStatusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 
     if (reply->error() == QNetworkReply::NoError) {
         replyString = reply->readAll();
@@ -136,7 +145,9 @@ QString Networker::deleteUser(const User &user)
 
     delete reply;
     delete manager;
-
+    if (httpStatusCode == 500) {
+        return "ERROR";
+    }
     return replyString;
 }
 
@@ -158,6 +169,7 @@ QString Networker::getPasswords(const User &user)
 
     // Start the loop to wait for the finished signal
     loop.exec();
+    int httpStatusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 
     if (reply->error() == QNetworkReply::NoError) {
         replyString = reply->readAll();
@@ -170,7 +182,9 @@ QString Networker::getPasswords(const User &user)
 
     delete reply;
     delete manager;
-
+    if (httpStatusCode == 500) {
+        return "ERROR";
+    }
     return replyString;
 }
 
@@ -193,6 +207,8 @@ QString Networker::postPassword(const User &user, const Password &password)
     // Start the loop to wait for the finished signal
     loop.exec();
 
+    int httpStatusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+
     if (reply->error() == QNetworkReply::NoError) {
         replyString = reply->readAll();
         qDebug() << replyString;
@@ -204,7 +220,9 @@ QString Networker::postPassword(const User &user, const Password &password)
 
     delete reply;
     delete manager;
-
+    if (httpStatusCode == 500) {
+        return "ERROR";
+    }
     return replyString;
 }
 
@@ -229,6 +247,7 @@ QString Networker::deletePassword(const User &user, const Password &password)
 
     // Start the loop to wait for the finished signal
     loop.exec();
+    int httpStatusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 
     if (reply->error() == QNetworkReply::NoError) {
         replyString = reply->readAll();
@@ -241,7 +260,9 @@ QString Networker::deletePassword(const User &user, const Password &password)
 
     delete reply;
     delete manager;
-
+    if (httpStatusCode == 500) {
+        return "ERROR";
+    }
     return replyString;
 }
 

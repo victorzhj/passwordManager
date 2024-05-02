@@ -18,19 +18,12 @@
     <property name="geometry">
      <rect>
       <x>150</x>
-      <y>120</y>
+      <y>20</y>
       <width>291</width>
       <height>238</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="3" column="0">
-      <widget class="QPushButton" name="signInButton">
-       <property name="text">
-        <string>Sign in</string>
-       </property>
-      </widget>
-     </item>
      <item row="1" column="0">
       <widget class="QPlainTextEdit" name="passwordInput">
        <property name="documentTitle">
@@ -52,6 +45,13 @@
       <widget class="QPushButton" name="logInButton">
        <property name="text">
         <string>Log in</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QPushButton" name="signInButton">
+       <property name="text">
+        <string>Sign in</string>
        </property>
       </widget>
      </item>
