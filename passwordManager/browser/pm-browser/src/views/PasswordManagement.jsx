@@ -74,13 +74,16 @@ function PasswordManagement({username, masterPassword, accessToken, derivedKeySa
     }
     
     const deletePassword = (id) => {
-        fetch(baseUrl + "Password/" + id, {
+        console.log(baseUrl + "Password/" + id, "delete");
+        fetch(baseUrl + "Password?passwordId=" + id, {
             method: "DELETE",
             headers: {
                 "Authorization": "Bearer " + accessToken
             }
         }).then((response) => {
             if (!response.ok) {
+                console.log(accessToken)
+                console.log(response);
                 toast.error("Failed to delete password");
             }
             else 
@@ -165,14 +168,13 @@ function PasswordManagement({username, masterPassword, accessToken, derivedKeySa
             <div>
                 <h2>Passwords</h2>
                 {passwords.map((password, index) => (
-                    <div key={password.id}>
+                    <div key={password.passwordId}>
                         <p>Site: {password.site}</p>
                         <p>Password: {decryptedPasswords[index]}</p>
-                        <button onClick={() => deletePassword(password.id)}>Delete</button>
+                        <button onClick={() => deletePassword(password.passwordId)}>Delete</button>
                     </div>
                 ))}
-            </div>
-            
+            </div>   
         </div>
     );
 }
