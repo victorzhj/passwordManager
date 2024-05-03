@@ -2,6 +2,8 @@ import './App.css';
 import { useState, useEffect } from 'react';
 import Authorization from './views/Authrozation';
 import PasswordManagement from './views/PasswordManagement';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const [username, setUsername] = useState("");

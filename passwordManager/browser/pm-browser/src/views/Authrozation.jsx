@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { sha256 } from "js-sha256";
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from "react-toastify";
+
 
 function Authrozation({ onLogin }) {
     const [username, setUsername] = useState("");
@@ -16,14 +19,11 @@ function Authrozation({ onLogin }) {
         .then((response) => {
             if (!response.ok) {
                 toast.error("Login failed")
-                console.log(response);
-            } else {
-                toast.success("Login successful")
             }
             return response.json()})
         .then(data => {
             if (!data.salt) {
-                toast.error("User not found");
+                toast.error("Login failed");
                 return;
             } else {
                 var salt = data.salt;
@@ -36,16 +36,17 @@ function Authrozation({ onLogin }) {
                     body: JSON.stringify({ 
                         username: username, 
                         masterPasswordHashed: hashedPassword })
-                }).then(response => response.json())
+                }).then((response) => {
+                    return response.json()})
                 .then(data => {
                     if (data.accessToken) {
                         const accessToken = data.accessToken;
                         const derivedKeySalt = data.derivedKeySalt;
                         onLogin(username, password, accessToken, derivedKeySalt);
-                    } else {
-                        alert("Invalid password");
                     }
-                });
+                }).catch((error) => {
+                    toast.error("Login failed");
+                })
             }}
         );
     }
@@ -54,10 +55,6 @@ function Authrozation({ onLogin }) {
         event.preventDefault();
         const salt = generateSalt();
         const deviredKeySalt = generateSalt();
-        console.log(salt, "salt");
-        console.log(deviredKeySalt, "deviredKeySalt");
-        console.log(signUpName, "signUpName");
-        console.log(signUpPassword, "signUpPassword")
         fetch(baseUrl + "User/register", {
             method: "POST",
             headers: {
@@ -89,6 +86,7 @@ function Authrozation({ onLogin }) {
 
     return (
         <div>
+            <ToastContainer />
             <h1>COMP.SEC.300</h1>
             <div>
                 <h2>Login</h2>

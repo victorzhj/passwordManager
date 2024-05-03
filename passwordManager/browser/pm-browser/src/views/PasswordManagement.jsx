@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { sha256 } from "js-sha256";
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from "react-toastify";
 
 function PasswordManagement({username, masterPassword, accessToken, derivedKeySalt, onLogout}) { 
     const [derivedKey, setDerivedKey] = useState('');
@@ -15,8 +17,8 @@ function PasswordManagement({username, masterPassword, accessToken, derivedKeySa
             setDerivedKey(key);
         }
     
-        getDerivedKey(); // Call the function
-    }, [masterPassword, derivedKeySalt]); // Add dependencies
+        getDerivedKey();
+    }, [masterPassword, derivedKeySalt]);
 
     useEffect(() => {
         getPasswords();
@@ -53,6 +55,7 @@ function PasswordManagement({username, masterPassword, accessToken, derivedKeySa
             if (!response.ok) {
                 toast.error("Failed to add password");
             } else {
+                toast.success("Password added");
                 getPasswords();
             }
         })
@@ -74,7 +77,6 @@ function PasswordManagement({username, masterPassword, accessToken, derivedKeySa
     }
     
     const deletePassword = (id) => {
-        console.log(baseUrl + "Password/" + id, "delete");
         fetch(baseUrl + "Password?passwordId=" + id, {
             method: "DELETE",
             headers: {
@@ -82,8 +84,6 @@ function PasswordManagement({username, masterPassword, accessToken, derivedKeySa
             }
         }).then((response) => {
             if (!response.ok) {
-                console.log(accessToken)
-                console.log(response);
                 toast.error("Failed to delete password");
             }
             else 
@@ -92,6 +92,22 @@ function PasswordManagement({username, masterPassword, accessToken, derivedKeySa
                 getPasswords();
             }
             
+        });
+    }
+
+    const deleteUser = () => {
+        fetch(baseUrl + "User", {
+            method: "DELETE",
+            headers: {
+                "Authorization": "Bearer " + accessToken
+            }
+        }).then((response) => {
+            if (!response.ok) {
+                toast.error("Failed to delete user");
+            } else {
+                toast.success("User deleted");
+                onLogout();
+            }
         });
     }
         
@@ -154,15 +170,39 @@ function PasswordManagement({username, masterPassword, accessToken, derivedKeySa
         }
         return new TextDecoder().decode(decryptedPassword);
     }
+    
+    const generatePassword = (length) => {
+        const array = new Uint8Array(length);
+        window.crypto.getRandomValues(array);
+        const password = Array.from(array, byte => String.fromCharCode(byte)).join('');
+        return btoa(password).slice(0, length);
+    }
 
     return (
         <div>
+            <ToastContainer />
             <h1>Password Management</h1>
             <button onClick={onLogout}>Logout</button>
+            <div> 
+                <h2>Delete user</h2>
+                <button onClick={deleteUser}>Delete User</button>
+            </div>
             <div>
                 <h2>Add Password</h2>
                 <input type="text" id="site" placeholder="Site" />
-                <input type="password" id="password" placeholder="Password" />
+                <input type="text" id="password" placeholder="Password" />
+                <input type="number" id="length" placeholder="Password length"/>
+                <button onClick={() => {
+                    const length = parseInt(document.getElementById("length").value, 10);
+                    if (typeof length !== "number") 
+                    {
+                        toast.error("Give password length");
+                    } else {
+                        document.getElementById("password").value = generatePassword(length);
+                    }
+                }
+                }>Generate Password</button>
+                
                 <button onClick={() => addPassword(document.getElementById("password").value, document.getElementById("site").value)}>Add Password</button>
             </div>
             <div>
