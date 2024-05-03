@@ -41,7 +41,7 @@ function Authrozation({ onLogin }) {
                     if (data.accessToken) {
                         const accessToken = data.accessToken;
                         const derivedKeySalt = data.derivedKeySalt;
-                        onLogin(username, hashedPassword, accessToken, derivedKeySalt);
+                        onLogin(username, password, accessToken, derivedKeySalt);
                     } else {
                         alert("Invalid password");
                     }
