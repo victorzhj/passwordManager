@@ -13,7 +13,6 @@ function PasswordManagement({username, masterPassword, accessToken, derivedKeySa
         const getDerivedKey = async () => {
             const key = await deriveKey(masterPassword, derivedKeySalt);
             setDerivedKey(key);
-            console.log(key, "derivedKey from useEffect");
         }
     
         getDerivedKey(); // Call the function
@@ -51,7 +50,6 @@ function PasswordManagement({username, masterPassword, accessToken, derivedKeySa
                 iv: iv
             })
         }).then((response) => {
-            //console.log(response, "response");
             if (!response.ok) {
                 toast.error("Failed to add password");
             } else {
@@ -71,7 +69,6 @@ function PasswordManagement({username, masterPassword, accessToken, derivedKeySa
                 }
                 return response.json()})
         .then(data => {
-            console.log(data, "passwords");
             setPasswords(data)
         });
     }
@@ -86,7 +83,12 @@ function PasswordManagement({username, masterPassword, accessToken, derivedKeySa
             if (!response.ok) {
                 toast.error("Failed to delete password");
             }
-            return response.json()
+            else 
+            {
+                toast.success("Password deleted");
+                getPasswords();
+            }
+            
         });
     }
         
@@ -117,7 +119,6 @@ function PasswordManagement({username, masterPassword, accessToken, derivedKeySa
     }
 
     const encryptPassword = async (password, key) => {
-        console.log(key, "encryptPassword key")
         const iv = window.crypto.getRandomValues(new Uint8Array(12));
         const encryptedPassword = await window.crypto.subtle.encrypt(
             {
@@ -127,8 +128,6 @@ function PasswordManagement({username, masterPassword, accessToken, derivedKeySa
             key,
             new TextEncoder().encode(password)
         );
-        console.log(iv, "iv from encryptPassword");
-        console.log(encryptedPassword, "encryptedPassword from encryptPassword");
         const encryptedPasswordBase64 = btoa(String.fromCharCode(...new Uint8Array(encryptedPassword)));
         const ivBase64 = btoa(String.fromCharCode(...iv));
         return {encryptedPassword: encryptedPasswordBase64, iv: ivBase64};
@@ -137,8 +136,6 @@ function PasswordManagement({username, masterPassword, accessToken, derivedKeySa
     const decryptPassword = async (encryptedPasswordBase64, ivBase64, key) => {
         const encryptedPassword = Uint8Array.from(atob(encryptedPasswordBase64), c => c.charCodeAt(0)).buffer;
         const iv = Uint8Array.from(atob(ivBase64), c => c.charCodeAt(0));
-        console.log(encryptedPassword, "encryptedPassword from decryptPassword");
-        console.log(iv, "iv from decryptPassword");
         var decryptedPassword;
         try {
                  decryptedPassword = await window.crypto.subtle.decrypt(
@@ -152,8 +149,6 @@ function PasswordManagement({username, masterPassword, accessToken, derivedKeySa
         } catch (error) {
             console.error('Failed to decrypt password:', error);
         }
-        const decryptedPasswordString = new TextDecoder().decode(decryptedPassword);
-        console.log(decryptedPasswordString, "decryptedPasswordString");
         return new TextDecoder().decode(decryptedPassword);
     }
 
