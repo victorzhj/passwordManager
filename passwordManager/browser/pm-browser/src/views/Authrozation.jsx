@@ -15,6 +15,11 @@ function Authrozation({ onLogin }) {
 
     const handleLogin = (event) => {
         event.preventDefault();
+        if (username === "" || password === "") {
+            toast.error("Username and password cannot be empty");
+            return;
+        }
+        // Fetch the salt for the user
         fetch(baseUrl + "User/getSalt?username=" + username)
         .then((response) => {
             if (!response.ok) {
@@ -27,7 +32,9 @@ function Authrozation({ onLogin }) {
                 return;
             } else {
                 var salt = data.salt;
+                // Hash the password with the salt for comparison
                 var hashedPassword = sha256(password + salt);
+                // Fetch the access token for the user
                 fetch(baseUrl + "User/login", {
                     method: "POST",
                     headers: {
@@ -53,6 +60,10 @@ function Authrozation({ onLogin }) {
 
     const handleSignUp = (event) => {
         event.preventDefault();
+        if (signUpName === "" || signUpPassword === "") {
+            toast.error("Username and password cannot be empty");
+            return;
+        }
         const salt = generateSalt();
         const deviredKeySalt = generateSalt();
         fetch(baseUrl + "User/register", {
@@ -79,7 +90,9 @@ function Authrozation({ onLogin }) {
     const generateSalt = () => {
         const length = 32;
         const array = new Uint8Array(length);
+        // get cryptographically strong random values
         window.crypto.getRandomValues(array);
+        // convert values to base64 string
         const password = Array.from(array, byte => String.fromCharCode(byte)).join('');
         return btoa(password).slice(0, length);
     }

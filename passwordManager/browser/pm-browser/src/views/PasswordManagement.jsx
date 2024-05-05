@@ -11,6 +11,7 @@ function PasswordManagement({username, masterPassword, accessToken, derivedKeySa
 
     const baseUrl = "https://localhost:8081/api/";
 
+    // Fetch the derived key when the master password or derived key salt changes
     useEffect(() => {
         const getDerivedKey = async () => {
             const key = await deriveKey(masterPassword, derivedKeySalt);
@@ -20,10 +21,12 @@ function PasswordManagement({username, masterPassword, accessToken, derivedKeySa
         getDerivedKey();
     }, [masterPassword, derivedKeySalt]);
 
+    // Fetch passwords when the component mounts
     useEffect(() => {
         getPasswords();
     }, []);
 
+    // Decrypt passwords when the passwords state changes
     useEffect(() => {
         const decryptPasswords = async () => {
             const decrypted = await Promise.all(passwords.map(password => decryptPassword(password.encryptedPassword, password.iv, derivedKey)));
@@ -35,9 +38,7 @@ function PasswordManagement({username, masterPassword, accessToken, derivedKeySa
         }
     }, [passwords]);
 
-    
     const addPassword = async (password, site) => {
-        //const derivedKey = await deriveKey(masterPassword, derivedKeySalt);
         const {encryptedPassword, iv} = await encryptPassword(password, derivedKey);
         fetch(baseUrl + "Password", {
             method: "POST",
@@ -110,11 +111,13 @@ function PasswordManagement({username, masterPassword, accessToken, derivedKeySa
             }
         });
     }
-        
+    
+    // Derive a key from a password and a salt
     async function deriveKey(password, salt) {
         const enc = new TextEncoder();
         const passwordBuffer = enc.encode(password);
         const saltBuffer = enc.encode(salt);
+        // Import the password as a CryptoKey for use with the Web Crypto API
         const importedKey = await window.crypto.subtle.importKey(
             'raw',
             passwordBuffer,
@@ -122,6 +125,7 @@ function PasswordManagement({username, masterPassword, accessToken, derivedKeySa
             false,
             ['deriveKey']
         );
+        // Derive a key from the imported key
         const derivedKey = await window.crypto.subtle.deriveKey(
             {
                 name: 'PBKDF2',
@@ -137,7 +141,9 @@ function PasswordManagement({username, masterPassword, accessToken, derivedKeySa
         return derivedKey;
     }
 
+    // Encrypt a password using AES-GCM
     const encryptPassword = async (password, key) => {
+        // Generate a random IV
         const iv = window.crypto.getRandomValues(new Uint8Array(12));
         const encryptedPassword = await window.crypto.subtle.encrypt(
             {
@@ -147,12 +153,15 @@ function PasswordManagement({username, masterPassword, accessToken, derivedKeySa
             key,
             new TextEncoder().encode(password)
         );
+        // Convert the encrypted password and IV to base64 strings
         const encryptedPasswordBase64 = btoa(String.fromCharCode(...new Uint8Array(encryptedPassword)));
         const ivBase64 = btoa(String.fromCharCode(...iv));
         return {encryptedPassword: encryptedPasswordBase64, iv: ivBase64};
     }
 
+    // Decrypt a password using AES-GCM
     const decryptPassword = async (encryptedPasswordBase64, ivBase64, key) => {
+        // Convert the base64 strings to Uint8Arrays
         const encryptedPassword = Uint8Array.from(atob(encryptedPasswordBase64), c => c.charCodeAt(0)).buffer;
         const iv = Uint8Array.from(atob(ivBase64), c => c.charCodeAt(0));
         var decryptedPassword;
@@ -173,7 +182,9 @@ function PasswordManagement({username, masterPassword, accessToken, derivedKeySa
     
     const generatePassword = (length) => {
         const array = new Uint8Array(length);
+        // Generate a random password
         window.crypto.getRandomValues(array);
+        // Convert the password to a base64 string
         const password = Array.from(array, byte => String.fromCharCode(byte)).join('');
         return btoa(password).slice(0, length);
     }
